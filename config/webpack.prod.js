@@ -17,7 +17,7 @@ export default merge(common, {
   },
   optimization: {
     runtimeChunk: true,
-    moduleIds: "deterministic",
+    // moduleIds: "deterministic",
     minimizer: [
       new TerserPlugin({
         parallel: 4,

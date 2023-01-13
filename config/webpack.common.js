@@ -1,10 +1,11 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
-
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+
 import chalk from "chalk";
 
 import { resolveApp } from "./paths.js";
+import BundleSizePlugin from "../plugin/BundleSizePlugin.cjs";
 const isEnvProduction = process.env.NODE_ENV === "production";
 
 export default {
@@ -55,6 +56,23 @@ export default {
           },
         ],
       },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: resolveApp("loaders") + "/html-color-loader.cjs",
+            options: {
+              text: "world",
+            },
+          },
+          {
+            loader: resolveApp("loaders") + "/md-loader.cjs",
+            options: {
+              headerIds: false,
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -69,6 +87,10 @@ export default {
     // 分离css
     new MiniCssExtractPlugin({
       filename: isEnvProduction ? "[name].[hash:8].css" : "[name].css",
+    }),
+    // 输出文件夹大小
+    new BundleSizePlugin({
+      limit: 3,
     }),
   ],
   resolve: {
